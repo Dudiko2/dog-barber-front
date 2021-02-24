@@ -1,6 +1,7 @@
 import useSwr from "swr";
 
 const fetcher = async (url: string) => {
+	console.log(url);
 	const res = await fetch(url, { credentials: "include" });
 
 	const data = await res.json();

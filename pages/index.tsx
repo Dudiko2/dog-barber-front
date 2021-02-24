@@ -1,15 +1,15 @@
-import { FC, useEffect } from "react";
+import { FC, useContext, useEffect } from "react";
 import { Card, Col, Row, Spin } from "antd";
 
-import useUser from "../hooks/useUser";
-import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
+import useAuth from "../hooks/useAuth";
 
 const Home: FC = ({}) => {
+	const ctx = useAuth();
+
 	return (
 		<Row>
 			<Col>
-				<Card>Hello</Card>;
+				<Card>Hello {ctx.user}</Card>;
 			</Col>
 		</Row>
 	);

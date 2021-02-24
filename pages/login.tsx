@@ -1,9 +1,7 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Form, Input, Button, Row, Col, Card, Divider } from "antd";
-
-import useUser from "../hooks/useUser";
 
 interface LoginValues {
 	username: string;
