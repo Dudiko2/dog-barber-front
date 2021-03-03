@@ -3,33 +3,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Form, Input, Button, Row, Col, Card, Divider } from "antd";
 
-interface LoginValues {
-	username: string;
-	password: string;
-}
+import { loginUser } from "../services/auth";
 
 interface FormProps {
-	submitForm: (values: LoginValues) => Promise<void>;
+	submitForm: typeof loginUser;
 }
 
 const Login: FC = () => {
 	const router = useRouter();
-	// take out of here
-	const loginUser = async (values: LoginValues) => {
-		try {
-			const res = await fetch("api/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify(values),
-			});
-			router.push("/");
-		} catch (e) {
-			console.log("whoops");
-		}
-	};
 
 	return (
 		<Row align={"middle"} justify={"center"} style={{ height: "100vh" }}>

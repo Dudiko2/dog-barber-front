@@ -1,15 +1,13 @@
-import { FC, useContext, useEffect } from "react";
-import { Card, Col, Row, Spin } from "antd";
+import { FC } from "react";
+import { Col, Row } from "antd";
 
-import useAuth from "../hooks/useAuth";
+import UsersTable from "../components/UsersTable";
 
 const Home: FC = ({}) => {
-	const ctx = useAuth();
-
 	return (
-		<Row>
-			<Col>
-				<Card>Hello {ctx.user}</Card>;
+		<Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
+			<Col span={12}>
+				<UsersTable />
 			</Col>
 		</Row>
 	);
