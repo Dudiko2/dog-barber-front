@@ -1,16 +1,31 @@
 import { FC } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { Form, Input, Button, Row, Col, Card, Divider } from "antd";
+import { Form, Input, Button, Row, Col, Card, Divider, message } from "antd";
 
-import { loginUser } from "../services/auth";
+import useUser from "../hooks/useUser";
+import { useRouter } from "next/router";
+
+import { mutate } from "swr";
+import { loginUser } from "../services/api";
 
 interface FormProps {
-	submitForm: typeof loginUser;
+	submitForm: (cred: any) => any;
 }
+
+const handleSubmit = async (values) => {
+	try {
+		await loginUser(values);
+		mutate("/clients/me");
+	} catch (e) {
+		message.error("Unable to connect");
+	}
+};
 
 const Login: FC = () => {
 	const router = useRouter();
+	const { user, isLoading, error } = useUser();
+
+	if (!isLoading && user) router.push("/");
 
 	return (
 		<Row align={"middle"} justify={"center"} style={{ height: "100vh" }}>
@@ -29,7 +44,7 @@ const Login: FC = () => {
 							</div>
 						</Col>
 					</Row>
-					<LoginForm submitForm={loginUser} />
+					<LoginForm submitForm={handleSubmit} />
 					<Divider />
 					<Row justify="center">
 						<Col>
