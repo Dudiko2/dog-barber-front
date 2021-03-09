@@ -6,8 +6,11 @@ import Protected from "../hoc/Protected";
 
 import { IUser } from "../types";
 
-const Home: FC<{ user: IUser }> = ({ user }) => {
-	console.log(user);
+interface HomeProps {
+	user: IUser;
+}
+
+const Home: FC<HomeProps> = ({ user }) => {
 	return (
 		<Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
 			<Col span={12}>

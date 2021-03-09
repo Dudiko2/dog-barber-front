@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import api from "../services/api";
 
 import { IUser } from "../types";
@@ -17,5 +17,7 @@ const useUser = () => {
 		error,
 	};
 };
+
+export const revalidateUser = () => mutate("/clients/me");
 
 export default useUser;

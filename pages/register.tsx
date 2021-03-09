@@ -1,14 +1,11 @@
 import { FC } from "react";
 import Link from "next/link";
-import { Row, Col, Card, Divider, Form, Input, Button } from "antd";
+import { Row, Col, Card, Divider, Form, Input, Button, message } from "antd";
 import PublicOnly from "../hoc/PublicOnly";
+import { registerUser } from "../services/api";
 
-interface RegisterValues {
-	fname: string;
-	username: string;
-	password: string;
-	confirmPassword: string;
-}
+import { IRegisterCred } from "../types";
+import { revalidateUser } from "../hooks/useUser";
 
 const Register: FC = () => {
 	return (
@@ -45,8 +42,14 @@ const Register: FC = () => {
 };
 
 const RegistrationForm: FC = () => {
-	const submitForm = (values: RegisterValues) => {
-		console.log(values);
+	const submitForm = async (values: IRegisterCred) => {
+		const { fname, username, password } = values;
+		try {
+			await registerUser({ fname, username, password });
+			revalidateUser();
+		} catch (e) {
+			message.error("Something went wrong!");
+		}
 	};
 
 	return (

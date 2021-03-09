@@ -2,11 +2,11 @@ import { FC } from "react";
 import Link from "next/link";
 import { Form, Input, Button, Row, Col, Card, Divider, message } from "antd";
 
-import { mutate } from "swr";
 import { loginUser } from "../services/api";
 import PublicOnly from "../hoc/PublicOnly";
 
 import { ICredentials } from "../types";
+import { revalidateUser } from "../hooks/useUser";
 
 const Login: FC = () => {
 	return (
@@ -42,7 +42,7 @@ const LoginForm: FC = () => {
 	const handleSubmit = async (values: ICredentials) => {
 		try {
 			await loginUser(values);
-			mutate("/clients/me");
+			revalidateUser();
 		} catch (e) {
 			message.error("Unable to connect");
 		}
