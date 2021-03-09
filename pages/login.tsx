@@ -2,49 +2,27 @@ import { FC } from "react";
 import Link from "next/link";
 import { Form, Input, Button, Row, Col, Card, Divider, message } from "antd";
 
-import useUser from "../hooks/useUser";
-import { useRouter } from "next/router";
-
 import { mutate } from "swr";
 import { loginUser } from "../services/api";
+import PublicOnly from "../hoc/PublicOnly";
 
-interface FormProps {
-	submitForm: (cred: any) => any;
-}
-
-const handleSubmit = async (values) => {
-	try {
-		await loginUser(values);
-		mutate("/clients/me");
-	} catch (e) {
-		message.error("Unable to connect");
-	}
-};
+import { ICredentials } from "../types";
 
 const Login: FC = () => {
-	const router = useRouter();
-	const { user, isLoading, error } = useUser();
-
-	if (!isLoading && user) router.push("/");
-
 	return (
 		<Row align={"middle"} justify={"center"} style={{ height: "100vh" }}>
 			<Col span={6}>
 				<Card>
-					<Row>
-						<Col>
-							<div
-								style={{
-									fontSize: "1.4rem",
-									fontWeight: "bold",
-									marginBottom: "1rem",
-								}}
-							>
-								Hello
-							</div>
-						</Col>
+					<Row
+						style={{
+							fontSize: "1.4rem",
+							fontWeight: "bold",
+							marginBottom: "1rem",
+						}}
+					>
+						<Col>Hello</Col>
 					</Row>
-					<LoginForm submitForm={handleSubmit} />
+					<LoginForm />
 					<Divider />
 					<Row justify="center">
 						<Col>
@@ -60,9 +38,18 @@ const Login: FC = () => {
 	);
 };
 
-const LoginForm: FC<FormProps> = ({ submitForm }) => {
+const LoginForm: FC = () => {
+	const handleSubmit = async (values: ICredentials) => {
+		try {
+			await loginUser(values);
+			mutate("/clients/me");
+		} catch (e) {
+			message.error("Unable to connect");
+		}
+	};
+
 	return (
-		<Form name="login-form" size="large" onFinish={submitForm}>
+		<Form name="login-form" size="large" onFinish={handleSubmit}>
 			<Form.Item
 				name="username"
 				rules={[{ required: true, message: "Please provide a username" }]}
@@ -92,4 +79,4 @@ const LoginForm: FC<FormProps> = ({ submitForm }) => {
 	);
 };
 
-export default Login;
+export default PublicOnly(Login);

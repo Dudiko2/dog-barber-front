@@ -1,6 +1,7 @@
 import { FC } from "react";
 import Link from "next/link";
 import { Row, Col, Card, Divider, Form, Input, Button } from "antd";
+import PublicOnly from "../hoc/PublicOnly";
 
 interface RegisterValues {
 	fname: string;
@@ -14,19 +15,17 @@ const Register: FC = () => {
 		<Row align={"middle"} justify={"center"} style={{ height: "100vh" }}>
 			<Col span={6}>
 				<Card>
-					<Row>
+					<Row style={{ marginBottom: "1rem" }}>
 						<Col>
-							<div style={{ marginBottom: "1rem" }}>
-								<div
-									style={{
-										fontSize: "1.4rem",
-										fontWeight: "bold",
-									}}
-								>
-									Register
-								</div>
-								<p>Please fill in the fields below</p>
-							</div>
+							<Row
+								style={{
+									fontSize: "1.4rem",
+									fontWeight: "bold",
+								}}
+							>
+								<Col>Register</Col>
+							</Row>
+							Please fill in the fields below
 						</Col>
 					</Row>
 					<RegistrationForm />
@@ -113,4 +112,4 @@ const RegistrationForm: FC = () => {
 	);
 };
 
-export default Register;
+export default PublicOnly(Register);

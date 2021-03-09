@@ -1,9 +1,6 @@
 import axios from "axios";
 
-interface ICredentials {
-	username: string;
-	password: string;
-}
+import { ICredentials, IUser } from "../types";
 
 const api = axios.create({
 	baseURL: "http://localhost:5000",
@@ -11,6 +8,6 @@ const api = axios.create({
 });
 
 export const loginUser = (credentials: ICredentials) =>
-	api.post("/login", credentials);
+	api.post<IUser>("/login", credentials);
 
 export default api;

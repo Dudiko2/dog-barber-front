@@ -1,25 +1,20 @@
 import { FC } from "react";
-import { Col, Row, Card } from "antd";
+import { Col, Row, Spin } from "antd";
 
 import UsersTable from "../components/UsersTable";
+import Protected from "../hoc/Protected";
 
-import useUser from "../hooks/useUser";
-import { useRouter } from "next/router";
+import { IUser } from "../types";
 
-const Home: FC = ({}) => {
-	const { user, isLoading, error } = useUser();
-	const router = useRouter();
-
-	if (!isLoading && !user) router.push("/login");
-
+const Home: FC<{ user: IUser }> = ({ user }) => {
+	console.log(user);
 	return (
 		<Row justify="center" align="middle" style={{ minHeight: "100vh" }}>
 			<Col span={12}>
-				{isLoading && <Card>loading</Card>}
 				<UsersTable />
 			</Col>
 		</Row>
 	);
 };
 
-export default Home;
+export default Protected(Home);

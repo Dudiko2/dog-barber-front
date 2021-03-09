@@ -1,11 +1,14 @@
 import useSWR from "swr";
 import api from "../services/api";
 
-const fetcher = (url) => api.get(url).then((res) => res.data);
+import { IUser } from "../types";
+
+const fetcher = (url: string) => api.get<IUser>(url).then((res) => res.data);
 
 const useUser = () => {
 	const { data, error } = useSWR("/clients/me", fetcher, {
 		shouldRetryOnError: false,
+		revalidateOnFocus: false,
 	});
 
 	return {
