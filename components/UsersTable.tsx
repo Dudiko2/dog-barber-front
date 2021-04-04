@@ -1,47 +1,27 @@
 import { FC } from "react";
 import { Table } from "antd";
+import useAppointments from "../hooks/useAppointments";
+import EditButton from "./EditButton";
+import DeleteButton from "./DeleteButton";
 
-const UsersTable: FC = () => {
-	const appointments = [
-		{
-			_id: "60173499cbd8915554672ff7",
-			created: "2012-04-23T18:25:43.511Z",
-			scheduled: "2012-04-23T18:25:43.511Z",
-			client: {
-				appointments: [],
-				_id: "6016e5eab395063e931fb787",
-				fname: "David",
-				username: "david",
-			},
-			__v: 0,
-		},
-		{
-			_id: "60173499cbd891554672ff7",
-			created: "2012-04-23T18:25:43.511Z",
-			scheduled: "2012-04-23T18:25:43.511Z",
-			client: {
-				appointments: [],
-				_id: "6016e5eab395063e931fb787",
-				fname: "David",
-				username: "david",
-			},
-			__v: 0,
-		},
-		{
-			_id: "6017499cbd8915554672ff7",
-			created: "2012-04-23T18:25:43.511Z",
-			scheduled: "2012-04-23T18:25:43.511Z",
-			client: {
-				appointments: [],
-				_id: "6016e5eab395063e931fb787",
-				fname: "David",
-				username: "david",
-			},
-			__v: 0,
-		},
-	];
+import { ColumnsType } from "antd/es/table";
+import { PropsWithUser } from "../types";
 
-	const columns = [
+interface Props extends PropsWithUser {}
+
+const UsersTable: FC<Props> = ({ user }) => {
+	const { appointments, isLoading: loadingAppointments } = useAppointments();
+
+	const Buttons = () => {
+		return (
+			<>
+				<EditButton />
+				<DeleteButton />
+			</>
+		);
+	};
+
+	const columns: ColumnsType<any> = [
 		{
 			title: "Username",
 			dataIndex: ["client", "username"],
@@ -56,6 +36,17 @@ const UsersTable: FC = () => {
 			title: "Scheduled to...",
 			dataIndex: "scheduled",
 			key: "scheduled",
+			render: (date: string) => {
+				const obj = new Date(date);
+				return obj.toLocaleString();
+			},
+		},
+		{
+			title: "",
+			key: "action",
+			render: (_, record) => {
+				return record.client._id === user._id ? <Buttons /> : "";
+			},
 		},
 	];
 
@@ -64,6 +55,7 @@ const UsersTable: FC = () => {
 			columns={columns}
 			dataSource={appointments}
 			rowKey={(record) => record._id}
+			loading={loadingAppointments}
 		/>
 	);
 };

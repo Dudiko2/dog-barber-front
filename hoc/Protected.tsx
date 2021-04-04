@@ -3,9 +3,9 @@ import PageSpinner from "../components/PageSpinner";
 import useUser from "../hooks/useUser";
 
 import { FC } from "react";
-import { IUser } from "../types";
+import { PagePropsWithUser } from "../types";
 
-const Protected = (Page: FC<{ user: IUser }>) => {
+const Protected = (Page: FC<PagePropsWithUser>) => {
 	return () => {
 		const { user, isLoading, error } = useUser();
 		const router = useRouter();
