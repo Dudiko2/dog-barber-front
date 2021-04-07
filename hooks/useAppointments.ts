@@ -1,7 +1,10 @@
 import useSWR, { mutate } from "swr";
 import api from "../services/api";
 
-const fetcher = (url: string) => api.get<any>(url).then((res) => res.data);
+import { IAppointment } from "../types";
+
+const fetcher = (url: string) =>
+	api.get<IAppointment[]>(url).then((res) => res.data);
 const key = "/appointments";
 
 const useAppointments = () => {

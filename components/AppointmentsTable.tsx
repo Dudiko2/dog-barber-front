@@ -1,27 +1,33 @@
 import { FC } from "react";
 import { Table } from "antd";
-import useAppointments from "../hooks/useAppointments";
 import EditButton from "./EditButton";
 import DeleteButton from "./DeleteButton";
 
 import { ColumnsType } from "antd/es/table";
-import { PropsWithUser } from "../types";
+import { PropsWithUser, IAppointment } from "../types";
 
-interface Props extends PropsWithUser {}
+interface Props extends PropsWithUser {
+	isLoading: boolean;
+	appointments: IAppointment[];
+	onEdit?: (appointment: IAppointment) => any;
+}
 
-const UsersTable: FC<Props> = ({ user }) => {
-	const { appointments, isLoading: loadingAppointments } = useAppointments();
-
-	const Buttons = () => {
+const AppointmentsTable: FC<Props> = ({
+	user,
+	isLoading,
+	appointments,
+	onEdit,
+}) => {
+	const Buttons = ({ record, onEditClick }) => {
 		return (
 			<>
-				<EditButton />
+				<EditButton onClick={() => onEditClick(record)} />
 				<DeleteButton />
 			</>
 		);
 	};
 
-	const columns: ColumnsType<any> = [
+	const columns: ColumnsType<IAppointment> = [
 		{
 			title: "Username",
 			dataIndex: ["client", "username"],
@@ -45,7 +51,11 @@ const UsersTable: FC<Props> = ({ user }) => {
 			title: "",
 			key: "action",
 			render: (_, record) => {
-				return record.client._id === user._id ? <Buttons /> : "";
+				return record.client._id === user._id ? (
+					<Buttons record={record} onEditClick={onEdit} />
+				) : (
+					""
+				);
 			},
 		},
 	];
@@ -55,9 +65,9 @@ const UsersTable: FC<Props> = ({ user }) => {
 			columns={columns}
 			dataSource={appointments}
 			rowKey={(record) => record._id}
-			loading={loadingAppointments}
+			loading={isLoading}
 		/>
 	);
 };
 
-export default UsersTable;
+export default AppointmentsTable;

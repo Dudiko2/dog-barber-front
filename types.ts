@@ -1,7 +1,14 @@
 export interface IUser {
-	appointements: Array<unknown>;
+	appointements: Array<IAppointment>;
 	fname: string;
 	username: string;
+	_id: string;
+}
+
+export interface IAppointment {
+	created: string;
+	scheduled: string;
+	client: IUser;
 	_id: string;
 }
 
