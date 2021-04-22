@@ -31,7 +31,7 @@ const Register: FC = () => {
 						<Col>
 							Already a member?
 							<Link href="/login">
-								<a> Log in</a>
+								<a>Log in</a>
 							</Link>
 						</Col>
 					</Row>

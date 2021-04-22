@@ -16,15 +16,21 @@ const EditAppointmentModal: FC<ModalProps> = ({
 	afterClose,
 }) => {
 	const [formInstance] = Form.useForm();
-	const submitForm = () => {
-		// formInstance.submit()
+	const handleOk = async () => {
+		try {
+			const values = await formInstance.validateFields();
+			// convert the Moment object to a string
+			const dateUTCStr = values.scheduled.utc().format();
+			// make http request here
 
-		console.log("submitted");
-		close();
+			// revalidate appointments
+			console.log("submitted");
+			close();
+		} catch (e) {}
 	};
 
 	const handleCancel = () => {
-		// clean
+		formInstance.resetFields();
 		close();
 	};
 
@@ -35,19 +41,24 @@ const EditAppointmentModal: FC<ModalProps> = ({
 			visible={isOpen}
 			okText="Submit"
 			title="Edit appointment"
-			onOk={submitForm}
+			onOk={handleOk}
 			onCancel={handleCancel}
 			afterClose={afterClose}
 		>
-			<Form form={formInstance}>
-				<Form.Item label="Scheduled to">
-					<DatePicker
-						showTime={true}
-						onChange={(m, d) => {
-							console.log(m);
-							console.log(d);
-						}}
-					/>
+			<Form form={formInstance} name="editAppointmentForm">
+				<Form.Item
+					label="Scheduled to"
+					name="scheduled"
+					required
+					rules={[
+						{
+							type: "object" as const,
+							required: true,
+							message: "Please select time",
+						},
+					]}
+				>
+					<DatePicker showTime={true} showSecond={false} />
 				</Form.Item>
 			</Form>
 		</Modal>
