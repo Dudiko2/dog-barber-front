@@ -12,8 +12,16 @@ const api = axios.create({
 export const loginUser = (credentials: ICredentials) =>
 	api.post<IUser>("/login", credentials);
 
+export const logoutUser = () => api.get("/logout");
+
 export const registerUser = (credentials: IRegisterCred) =>
 	api.post<IUser>("/clients", credentials);
+
+export const createAppointment = (scheduled: string) =>
+	api.post<IAppointment>(APPOINTMENT_ROUTE, {
+		scheduled,
+		created: new Date().toUTCString(),
+	});
 
 export const deleteAppointment = (id: string) =>
 	api.delete(APPOINTMENT_ROUTE, { data: { id } });

@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import PageSpinner from "../components/PageSpinner";
+import LogoutButton from "../components/LogoutButton";
 import useUser from "../hooks/useUser";
 
 import { FC } from "react";
@@ -14,7 +15,13 @@ const Protected = (Page: FC<PropsWithUser>) => {
 
 		if (isLoading || error) return <PageSpinner />;
 
-		if (user) return <Page user={user} />;
+		if (user)
+			return (
+				<>
+					<LogoutButton />
+					<Page user={user} />
+				</>
+			);
 	};
 };
 

@@ -2,6 +2,7 @@ import { FC } from "react";
 import { Table } from "antd";
 import EditButton from "./EditButton";
 import DeleteButton from "./DeleteButton";
+import AddAppointmentButton from "./AddAppointmentButton";
 
 import { ColumnsType } from "antd/es/table";
 import { PropsWithUser, IAppointment } from "../types";
@@ -51,7 +52,7 @@ const AppointmentsTable: FC<Props> = ({
 			},
 		},
 		{
-			title: "",
+			title: <AddAppointmentButton />,
 			key: "action",
 			render: (_, record) => {
 				return record.client._id === user._id ? (
