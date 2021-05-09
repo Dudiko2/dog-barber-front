@@ -6,9 +6,9 @@ export interface IUser {
 }
 
 export interface IAppointment {
-	created: string;
+	created?: string;
 	scheduled: string;
-	client: IUser;
+	client?: IUser;
 	_id: string;
 }
 

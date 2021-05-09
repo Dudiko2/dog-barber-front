@@ -10,6 +10,7 @@ interface Props extends PropsWithUser {
 	isLoading: boolean;
 	appointments: IAppointment[];
 	onEdit?: (appointment: IAppointment) => any;
+	onDelete?: (appointment: IAppointment) => any;
 }
 
 const AppointmentsTable: FC<Props> = ({
@@ -17,12 +18,13 @@ const AppointmentsTable: FC<Props> = ({
 	isLoading,
 	appointments,
 	onEdit,
+	onDelete,
 }) => {
-	const Buttons = ({ record, onEditClick }) => {
+	const Buttons = ({ record, onEditClick, onDeleteClick }) => {
 		return (
 			<>
 				<EditButton onClick={() => onEditClick(record)} />
-				<DeleteButton />
+				<DeleteButton onClick={() => onDeleteClick(record)} />
 			</>
 		);
 	};
@@ -44,6 +46,7 @@ const AppointmentsTable: FC<Props> = ({
 			key: "scheduled",
 			render: (date: string) => {
 				const obj = new Date(date);
+
 				return obj.toLocaleString();
 			},
 		},
@@ -52,7 +55,11 @@ const AppointmentsTable: FC<Props> = ({
 			key: "action",
 			render: (_, record) => {
 				return record.client._id === user._id ? (
-					<Buttons record={record} onEditClick={onEdit} />
+					<Buttons
+						record={record}
+						onEditClick={onEdit}
+						onDeleteClick={onDelete}
+					/>
 				) : (
 					""
 				);

@@ -1,14 +1,19 @@
 import { FC, useState } from "react";
-import { Col, Row } from "antd";
+import { Col, Row, Modal, message } from "antd";
 
 import AppointmentsTable from "../components/AppointmentsTable";
 import Protected from "../hoc/Protected";
 import EditAppointmentModal from "../components/EditAppointmentModal";
-import useAppointments from "../hooks/useAppointments";
+import useAppointments, {
+	revalidateAppointments,
+} from "../hooks/useAppointments";
+import { deleteAppointment } from "../services/api";
 
 import { IAppointment, PropsWithUser } from "../types";
 
 interface HomeProps extends PropsWithUser {}
+
+const { confirm } = Modal;
 
 const Home: FC<HomeProps> = ({ user }) => {
 	const { appointments, isLoading: loadingAppointments } = useAppointments();
@@ -25,6 +30,18 @@ const Home: FC<HomeProps> = ({ user }) => {
 		openModal();
 	};
 
+	const onDeleteHandler = (appointment: IAppointment) => {
+		confirm({
+			title: "Delete an appointment",
+			onOk() {
+				return deleteAppointment(appointment._id)
+					.then(() => revalidateAppointments())
+					.catch(() => message.error("Something went wrong!"));
+			},
+			onCancel() {},
+		});
+	};
+
 	const modalCleanup = () => {
 		setSelectedAppointment(null);
 	};
@@ -38,6 +55,7 @@ const Home: FC<HomeProps> = ({ user }) => {
 						isLoading={loadingAppointments}
 						user={user}
 						onEdit={onEditHandler}
+						onDelete={onDeleteHandler}
 					/>
 				</Col>
 			</Row>

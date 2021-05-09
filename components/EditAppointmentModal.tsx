@@ -1,5 +1,8 @@
-import { Form, Modal, DatePicker } from "antd";
-import { FC } from "react";
+import { Form, Modal, DatePicker, message } from "antd";
+import { FC, useState } from "react";
+
+import { revalidateAppointments } from "../hooks/useAppointments";
+import { editAppointment } from "../services/api";
 import { IAppointment } from "../types";
 
 interface ModalProps {
@@ -16,25 +19,30 @@ const EditAppointmentModal: FC<ModalProps> = ({
 	afterClose,
 }) => {
 	const [formInstance] = Form.useForm();
+	const [confirmLoading, setConfirmLoading] = useState(false);
+
 	const handleOk = async () => {
+		setConfirmLoading(true);
 		try {
 			const values = await formInstance.validateFields();
-			// convert the Moment object to a string
-			const dateUTCStr = values.scheduled.utc().format();
-			// make http request here
+			const momentDateStr = values.scheduled.utc().format();
 
-			// revalidate appointments
-			console.log("submitted");
-			close();
-		} catch (e) {}
+			await editAppointment({
+				...appointment,
+				scheduled: new Date(momentDateStr).toUTCString(),
+			});
+			await revalidateAppointments();
+		} catch (e) {
+			message.error("Something went wrong");
+		}
+		setConfirmLoading(false);
+		close();
 	};
 
 	const handleCancel = () => {
 		formInstance.resetFields();
 		close();
 	};
-
-	console.log(appointment);
 
 	return (
 		<Modal
@@ -44,6 +52,7 @@ const EditAppointmentModal: FC<ModalProps> = ({
 			onOk={handleOk}
 			onCancel={handleCancel}
 			afterClose={afterClose}
+			confirmLoading={confirmLoading}
 		>
 			<Form form={formInstance} name="editAppointmentForm">
 				<Form.Item
@@ -58,7 +67,7 @@ const EditAppointmentModal: FC<ModalProps> = ({
 						},
 					]}
 				>
-					<DatePicker showTime={true} showSecond={false} />
+					<DatePicker showTime showSecond={false} showNow />
 				</Form.Item>
 			</Form>
 		</Modal>
