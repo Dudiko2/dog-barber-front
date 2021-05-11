@@ -10,6 +10,7 @@ import { PropsWithUser, IAppointment } from "../types";
 interface Props extends PropsWithUser {
 	isLoading: boolean;
 	appointments: IAppointment[];
+	onCreate?: () => any;
 	onEdit?: (appointment: IAppointment) => any;
 	onDelete?: (appointment: IAppointment) => any;
 }
@@ -18,6 +19,7 @@ const AppointmentsTable: FC<Props> = ({
 	user,
 	isLoading,
 	appointments,
+	onCreate,
 	onEdit,
 	onDelete,
 }) => {
@@ -52,7 +54,7 @@ const AppointmentsTable: FC<Props> = ({
 			},
 		},
 		{
-			title: <AddAppointmentButton />,
+			title: <AddAppointmentButton onClick={onCreate} />,
 			key: "action",
 			render: (_, record) => {
 				return record.client._id === user._id ? (

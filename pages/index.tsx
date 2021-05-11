@@ -4,6 +4,7 @@ import { Col, Row, Modal, message } from "antd";
 import AppointmentsTable from "../components/AppointmentsTable";
 import Protected from "../hoc/Protected";
 import EditAppointmentModal from "../components/EditAppointmentModal";
+import CreateAppointmentModal from "../components/CreateAppointmentModal";
 import useAppointments, {
 	revalidateAppointments,
 } from "../hooks/useAppointments";
@@ -17,17 +18,24 @@ const { confirm } = Modal;
 
 const Home: FC<HomeProps> = ({ user }) => {
 	const { appointments, isLoading: loadingAppointments } = useAppointments();
-	const [modalOpen, setModalOpen] = useState(false);
+	const [editModalOpen, setEditModalOpen] = useState(false);
+	const [createModalOpen, setCreateModalOpen] = useState(false);
 	const [selectedAppointment, setSelectedAppointment] = useState<IAppointment>(
 		null
 	);
 
-	const openModal = () => setModalOpen(true);
-	const closeModal = () => setModalOpen(false);
+	const openEditModal = () => setEditModalOpen(true);
+	const closeEditModal = () => setEditModalOpen(false);
+	const openCreateModal = () => setCreateModalOpen(true);
+	const closeCreateModal = () => setCreateModalOpen(false);
+
+	const onCreateHandler = () => {
+		openCreateModal();
+	};
 
 	const onEditHandler = (appointment: IAppointment) => {
 		setSelectedAppointment(appointment);
-		openModal();
+		openEditModal();
 	};
 
 	const onDeleteHandler = (appointment: IAppointment) => {
@@ -54,6 +62,7 @@ const Home: FC<HomeProps> = ({ user }) => {
 						appointments={appointments}
 						isLoading={loadingAppointments}
 						user={user}
+						onCreate={onCreateHandler}
 						onEdit={onEditHandler}
 						onDelete={onDeleteHandler}
 					/>
@@ -61,12 +70,16 @@ const Home: FC<HomeProps> = ({ user }) => {
 			</Row>
 			{!!selectedAppointment && (
 				<EditAppointmentModal
-					isOpen={modalOpen}
-					close={closeModal}
+					isOpen={editModalOpen}
+					close={closeEditModal}
 					afterClose={modalCleanup}
 					appointment={selectedAppointment}
 				/>
 			)}
+			<CreateAppointmentModal
+				isOpen={createModalOpen}
+				close={closeCreateModal}
+			/>
 		</>
 	);
 };
